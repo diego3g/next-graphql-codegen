@@ -1,0 +1,933 @@
+type Address {
+  city: String!
+  complement: String!
+  country: String
+  countryCode: String!
+  foreignAddress: String
+  id: ID!
+  neighborhood: String!
+  number: String!
+  postalCode: String!
+  state: String!
+  street: String!
+}
+
+input BilletInput {
+  instructions: String!
+}
+
+type Certificate {
+  createdAt: DateTime!
+  id: ID!
+  language: String!
+  student: User!
+  theme: String!
+  trail: Trail!
+}
+
+type Challenge {
+  appliedCourses: [Course!]!
+  createdAt: DateTime!
+  description: String!
+  id: ID!
+  imageUrl: String!
+  instructionsUrl: String!
+  level: ChallengeLevel!
+  requirements: String!
+  slug: String!
+  submission: ChallengeSubmission
+  tags: [ChallengeTag!]!
+  title: String!
+  trail: Trail!
+}
+
+"""Available levels for challenges"""
+enum ChallengeLevel {
+  ADVANCED
+  BASIC
+  INTERMEDIATE
+}
+
+type ChallengeSubmission {
+  challenge: Challenge!
+  createdAt: DateTime!
+  id: ID!
+  student: User!
+  submissionUrl: String!
+}
+
+type ChallengeTag {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  slug: String!
+}
+
+type Comment {
+  author: User!
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  mentionedUsers: [User!]!
+  reactions(limit: Int = 10, offset: Int = 0): PaginatedCommentReaction!
+  viewerIsAuthor: Boolean
+  viewerReaction: CommentReaction
+}
+
+type CommentReaction {
+  author: User!
+  id: ID!
+  type: ReactionType!
+}
+
+type Connection {
+  author: User!
+  id: ID!
+  receiver: User!
+  status: ConnectionStatus!
+}
+
+"""Available connection status"""
+enum ConnectionStatus {
+  ACCEPTED
+  DECLINED
+  PENDING
+}
+
+type Course {
+  createdAt: DateTime!
+  description: String!
+  educator: Educator!
+  iconUrl: String
+  id: ID!
+  lastWatchedLesson: Lesson
+  lessonGroups: [LessonGroup!]!
+  order: Float!
+  slug: String!
+  statistics: CourseStatistics
+  title: String!
+  trail: Trail!
+  watchedPercentage: Float
+}
+
+type CourseProgress {
+  completed: Boolean!
+  slug: String!
+}
+
+type CourseStatistics {
+  duration: Float!
+  totalLessons: Float!
+}
+
+input CreateAddressInput {
+  city: String!
+  complement: String!
+  country: String
+  countryCode: String!
+  foreignAddress: String
+  neighborhood: String!
+  number: String!
+  postalCode: String!
+  state: String!
+  street: String!
+}
+
+input CreateChallengeSubmissionInput {
+  challengeId: String!
+  submissionUrl: String!
+}
+
+input CreateCommentInput {
+  content: String!
+  mentionedUsersIds: [String!]
+  postId: String!
+}
+
+input CreateCommentReactionInput {
+  commentId: String!
+  type: ReactionType!
+}
+
+input CreateCustomerInput {
+  address: CreateAddressInput!
+  atlasUserId: String
+  birthDate: DateTime
+  email: String!
+  fiscalDocument: String!
+  name: String!
+  phone: String!
+  thirdPartyFiscalDocument: String
+}
+
+input CreateImpressionInput {
+  clicked: Boolean
+  reference: String
+  type: ImpressionType!
+  videoId: String!
+}
+
+input CreateLinkPostInput {
+  content: String!
+  link: String!
+  linkPreviewId: String
+  mentionedUsersIds: [String!]
+  tagsIds: [String!]!
+}
+
+input CreatePlanInput {
+  extensionPlanId: String
+  identifier: String!
+  installmentMonths: [Float!]!
+  isPurchaseable: Boolean!
+  isRecurrent: Boolean!
+  priceInCents: Float!
+  products: [CreateProductInput!]!
+  proviUrl: String
+  recurrenceInterval: Float!
+  recurrencePeriod: RecurrencePeriod!
+  refundDays: Float
+  slug: String!
+  statementDescriptor: String
+  title: String!
+}
+
+input CreatePostReactionInput {
+  postId: String!
+  type: ReactionType!
+}
+
+input CreateProductInput {
+  cycles: Float!
+  identifier: String!
+  priceInCents: Float!
+  quantity: Float!
+  title: String!
+}
+
+input CreateSignatureInput {
+  campaign: String
+  couponCode: String
+  customer: CreateCustomerInput
+
+  """
+  One of these fields must be informed according to the chosen payment method
+  """
+  paymentInfo: PaymentTypes!
+  paymentMethod: InvoicePaymentTypes!
+  referral: String
+  referralUserId: String
+  slug: String!
+  upsell: UpsellTypes
+}
+
+input CreateStudentInput {
+  atlasUserId: String!
+  email: String!
+  imageUrl: String!
+  name: String!
+}
+
+type Creator {
+  about: String
+  atlasUserId: String!
+  avatarUrl: String
+  company: String
+  expertises(limit: Int = 10, offset: Int = 0): PaginatedExpertises!
+  id: ID!
+  isFollowingCreator: Boolean!
+  name: String!
+  occupation: String
+  slug: String!
+  videos(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedVideos!
+}
+
+input CreditCardInput {
+  installments: Float!
+  paymentToken: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type DefaultLinkPreview implements LinkPreview {
+  description: String
+  id: ID!
+  imageUrl: String
+  siteName: String
+  title: String
+  url: String!
+}
+
+type Discount {
+  valueInCents: Int!
+}
+
+type Educator {
+  createdAt: DateTime!
+  description: String!
+  email: String!
+  id: ID!
+  imageUrl: String!
+  name: String!
+  profileUrl: String!
+  role: String!
+  technologies: [Technology!]!
+}
+
+type Expertise {
+  id: ID!
+  imageUrl: String!
+  name: String!
+  slug: String!
+}
+
+type Feedback {
+  additionalInformation: String
+  createdAt: DateTime!
+  id: ID!
+  lesson: Lesson!
+  stars: Float!
+  student: User!
+  time: Float!
+}
+
+input GenerateLinkPreviewInput {
+  url: String!
+}
+
+type GenerateLinkPreviewResult {
+  value: LinkPreview
+}
+
+type GithubLinkPreview implements LinkPreview {
+  avatarUrl: String
+  description: String
+  forks: Float
+  id: ID!
+  language: String
+  repositoryName: String
+  repositoryOwner: String
+  stars: Float
+  url: String!
+}
+
+type Impression {
+  clicked: Boolean
+  id: ID!
+  memberId: String!
+  reference: String
+  type: ImpressionType!
+  videoId: String!
+}
+
+"""Available impression types"""
+enum ImpressionType {
+  BOOKMARK
+  CATALOG
+  FOLLOWING_TAGS
+  HISTORY
+  PLAYLIST
+  PROFILE
+  SEARCH
+  TAG
+}
+
+type Invoice {
+  amountInCents: Float!
+  createdAt: DateTime!
+  currencyCode: String!
+  externalTransactionId: String!
+  id: ID!
+  installmentsAmount: Float!
+  metadata: String
+  paymentEngine: String!
+  paymentType: InvoicePaymentTypes!
+  refundedAt: DateTime
+  signature: Signature!
+  status: InvoiceStatus!
+}
+
+"""Available invoice payment type status"""
+enum InvoicePaymentTypes {
+  BILLET
+  CREDIT_CARD
+  DEBIT_CARD
+  FINANCING
+  PIX
+  SCHOLARSHIP
+  VOUCHER
+}
+
+"""Available invoice status"""
+enum InvoiceStatus {
+  CANCELED
+  FAILED
+  PAID
+  PENDING
+  PROCESSED
+  REFUNDED
+  REFUND_REQUESTED
+}
+
+type IsValidUsername {
+  isValid: Boolean!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""Job status"""
+enum JobStatus {
+  EMPLOYED
+  FREELANCER
+  UNDEFINED
+  UNEMPLOYED
+}
+
+type LastWatchedLessons {
+  lastLesson: Lesson
+  lastLessonsByTrail: [LastWatchedLessonsByTrail!]
+}
+
+type LastWatchedLessonsByTrail {
+  lesson: Lesson
+  trailSlug: String!
+}
+
+type Lesson {
+  audioDescriptionVideoId: String
+  course: Course!
+  createdAt: DateTime!
+  description: String!
+  duration: Float!
+  feedback: Feedback
+  hasCaption: Boolean!
+  id: ID!
+  jupiterVideoId: String!
+  lessonGroup: LessonGroup!
+  order: Float!
+  progress: LessonProgress
+  signalLanguageVideoId: String
+  slug: String!
+  title: String!
+  transcription: Transcription
+}
+
+type LessonGroup {
+  course: Course!
+  createdAt: DateTime!
+  id: ID!
+  lessons: [Lesson!]!
+  order: Float!
+  slug: String!
+  title: String!
+}
+
+type LessonProgress {
+  completed: Boolean
+  createdAt: DateTime!
+  id: ID!
+  lesson: Lesson!
+  manuallyCompleted: Boolean
+  student: User!
+  watchedPercentage: Float
+  watchedSeconds: Float
+}
+
+type LinkPost implements Post {
+  author: User!
+  comments(limit: Int = 10, offset: Int = 0): PaginatedComment!
+  content: String
+  createdAt: DateTime!
+  id: ID!
+  link: String!
+  linkPreview: LinkPreview
+  mentionedUsers: [User!]!
+  reactions(limit: Int = 10, offset: Int = 0): PaginatedPostReaction!
+  tags: [Tag!]!
+  viewerBookmark: UserPostBookmark
+  viewerIsAuthor: Boolean
+  viewerReaction: PostReaction
+}
+
+interface LinkPreview {
+  id: ID!
+  url: String!
+}
+
+type Mutation {
+  acceptConnection(id: String!): Connection!
+  cancelSignature(signatureId: String!): Boolean!
+  createBookmark(id: String!): Boolean!
+  createChallengeSubmission(data: CreateChallengeSubmissionInput!): ChallengeSubmission!
+  createComment(data: CreateCommentInput!): Comment!
+  createCommentReaction(data: CreateCommentReactionInput!): CommentReaction!
+  createConnection(userId: String!): Connection!
+  createCustomer(data: CreateCustomerInput!): User!
+  createLinkPost(data: CreateLinkPostInput!): LinkPost!
+  createPlan(data: CreatePlanInput!): Plan!
+  createPostReaction(data: CreatePostReactionInput!): PostReaction!
+  createSignature(data: CreateSignatureInput!): Signature!
+  createStudent(data: CreateStudentInput!): User!
+  declineConnection(id: String!): Connection!
+  deleteComment(id: String!): Boolean!
+  deleteCommentReaction(id: String!): Boolean!
+  deletePost(id: String!): Boolean!
+  deletePostReaction(id: String!): Boolean!
+  followCreator(id: String!): Boolean!
+  followVideoTag(id: String!): Boolean!
+  generateLinkPreview(data: GenerateLinkPreviewInput!): GenerateLinkPreviewResult
+  impressions(data: [CreateImpressionInput!]!): [Impression!]!
+  markVideoAsWatched(id: String!): Boolean!
+  removeBookmark(id: String!): Boolean!
+  removePostFromBookmarks(userPostBookmarkId: String!): Boolean!
+  savePostToBookmarks(postId: String!): UserPostBookmark!
+  unfollowCreator(id: String!): Boolean!
+  unfollowVideoTag(id: String!): Boolean!
+  unmarkVideoAsWatched(id: String!): Boolean!
+  updateComment(data: UpdateCommentInput!): Comment!
+  updateCustomer(data: UpdateCustomerInput!): User!
+  updateLinkPost(data: UpdateLinkPostInput!): LinkPost!
+  updateUserBiography(data: UpdateUserBiographyInput!): User!
+  updateUserProfile(data: UpdateUserProfileInput!): User!
+  upsertCustomerAddress(data: CreateAddressInput!): User!
+  upsertFeedback(data: UpsertFeedbackInput!): Feedback!
+  upsertLessonProgress(data: UpsertLessonProgressInput!): LessonProgress!
+}
+
+type PaginatedChallenge {
+  nodes: [Challenge!]
+  totalCount: Int!
+}
+
+type PaginatedComment {
+  nodes: [Comment!]
+  totalCount: Int!
+}
+
+type PaginatedCommentReaction {
+  nodes: [CommentReaction!]
+  totalCount: Int!
+}
+
+type PaginatedConnection {
+  nodes: [Connection!]
+  totalCount: Int!
+}
+
+type PaginatedCreators {
+  nodes: [Creator!]
+  totalCount: Int!
+}
+
+type PaginatedExpertises {
+  nodes: [Expertise!]
+  totalCount: Int!
+}
+
+type PaginatedPost {
+  nodes: [Post!]
+  totalCount: Int!
+}
+
+type PaginatedPostReaction {
+  nodes: [PostReaction!]
+  totalCount: Int!
+}
+
+type PaginatedTags {
+  nodes: [Tag!]
+  totalCount: Int!
+}
+
+type PaginatedUsers {
+  nodes: [User!]
+  totalCount: Int!
+}
+
+type PaginatedVideoFiles {
+  nodes: [VideoFile!]
+  totalCount: Int!
+}
+
+type PaginatedVideoSections {
+  nodes: [VideoSection!]
+  totalCount: Int!
+}
+
+type PaginatedVideoTag {
+  nodes: [VideoTag!]
+  totalCount: Int!
+}
+
+type PaginatedVideos {
+  nodes: [Video!]
+  totalCount: Int!
+}
+
+input PaymentTypes {
+  billet: BilletInput
+  creditCard: CreditCardInput
+  pix: PixInput
+}
+
+input PixInput {
+  expiresInSeconds: Float!
+}
+
+type Plan {
+  extensionPlan: Plan
+  extensionPlanId: String
+  id: ID!
+  identifier: String!
+  isPurchaseable: Boolean!
+  isRecurrent: Boolean!
+  priceInCents: Float!
+  priceInCentsWithDiscount: Float
+  products: [Product!]!
+  proviUrl: String
+  recurrenceInterval: Float!
+  recurrencePeriod: RecurrencePeriod!
+  refundDays: Float!
+  slug: String!
+  statementDescriptor: String
+  title: String!
+}
+
+type Playlist {
+  description: String!
+  id: ID!
+  slug: String!
+  title: String!
+  videos(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedVideos!
+}
+
+interface Post {
+  author: User!
+  comments(limit: Int = 10, offset: Int = 0): PaginatedComment!
+  content: String
+  createdAt: DateTime!
+  id: ID!
+  mentionedUsers: [User!]!
+  reactions(limit: Int = 10, offset: Int = 0): PaginatedPostReaction!
+  tags: [Tag!]!
+  viewerBookmark: UserPostBookmark
+  viewerIsAuthor: Boolean
+  viewerReaction: PostReaction
+}
+
+type PostReaction {
+  author: User!
+  id: ID!
+  type: ReactionType!
+}
+
+type Product {
+  id: ID!
+  identifier: String!
+  priceInCents: Float!
+  title: String!
+}
+
+type Progress {
+  slug: String!
+  totalOfProgress: Float!
+}
+
+type Query {
+  accessedVideos(limit: Int = 10, offset: Int = 0): PaginatedVideos!
+  bookmarksVideos(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedVideos!
+  certificate(certificateId: String!): Certificate!
+  certificates: [Certificate!]!
+  challenge(slug: String!): Challenge!
+  challenges(limit: Int = 10, offset: Int = 0, searchLevels: [ChallengeLevel!] = null, searchTags: [String!] = null): PaginatedChallenge!
+  checkIfUsernameIsValid(username: String = ""): IsValidUsername!
+  comingSoonVideos(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedVideos!
+  comments(limit: Int = 10, offset: Int = 0, postId: String = ""): PaginatedComment!
+  connections(limit: Int = 10, offset: Int = 0, userId: String = ""): PaginatedConnection!
+  couponDiscount(coupon: String!, planSlug: String!): Discount!
+  course(slug: String!): Course!
+  courseProgress(courseSlug: String!): [CourseProgress!]!
+  coursesProgress(trailSlug: String!): [Progress!]!
+  creator(id: String!): Creator!
+  creatorBySlug(slug: String!): Creator!
+  creators(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedCreators!
+  creatorsWithExpertiseTheMemberIsInterestedIn(limit: Int = 10, offset: Int = 0): PaginatedCreators!
+  currentStudent: User!
+  followingCreators(limit: Int = 10, offset: Int = 0): PaginatedCreators!
+  followingVideoTags(limit: Int = 10, offset: Int = 0): PaginatedVideoTag!
+  freeVideos(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedVideos!
+  hintVideoTags(interests: [String!]!, limit: Int = 10, offset: Int = 0): PaginatedVideoTag!
+  hotVideoTags(limit: Int = 10, offset: Int = 0): PaginatedVideoTag!
+  hotVideos(limit: Int = 10, offset: Int = 0): PaginatedVideos!
+  invites(limit: Int = 10, offset: Int = 0): PaginatedConnection!
+  isAuthenticated: Boolean!
+  keepWatching(limit: Int = 10, offset: Int = 0): PaginatedVideos!
+  maybeItsInMyInterest(limit: Int = 10, offset: Int = 0): PaginatedVideos!
+  me: User!
+  newVideos(limit: Int = 10, offset: Int = 0): PaginatedVideos!
+  ok: Boolean!
+  plan(slug: String!): Plan!
+  playlist(id: String!): Playlist!
+  playlistByVideoId(id: String!): Playlist!
+  post(id: String!): Post!
+  posts(limit: Int = 10, offset: Int = 0): PaginatedPost!
+  recentVideos(limit: Int = 10, offset: Int = 0): PaginatedVideos!
+  tags(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedTags!
+  trail(slug: String!): Trail!
+  trailProgress: [Progress!]!
+  trails: [Trail!]!
+  user(username: String!): User!
+  users(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedUsers!
+  video(id: String!): Video!
+  videoBySlug(slug: String!): Video!
+  videoTag(id: String!): VideoTag!
+  videoTagBySlug(slug: String!): VideoTag!
+  videoTags(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedVideoTag!
+  videos(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedVideos!
+  videosByTagSlug(limit: Int = 10, offset: Int = 0, slug: String!): PaginatedVideos!
+  videosTaggedWithTagsThatTheMemberFollows(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedVideos!
+  watchedVideos(limit: Int = 10, offset: Int = 0, search: String = ""): PaginatedVideos!
+  worthCheckingOut(limit: Int = 10, offset: Int = 0): PaginatedVideos!
+}
+
+"""Available reaction types"""
+enum ReactionType {
+  LIKE
+}
+
+"""Available recurrence period"""
+enum RecurrencePeriod {
+  MONTHLY
+  SEMIANNUAL
+  YEARLY
+}
+
+type Signature {
+  amountInCents: Float!
+  campaign: String
+  coupon: String
+  createdAt: DateTime!
+  currencyCode: String!
+  customer: User!
+  discountInCents: Float!
+  id: ID!
+  invoice: Invoice!
+  metadata: JSON
+  plan: Plan!
+  refundableUntil: DateTime
+  status: SignatureStatus!
+}
+
+"""Available signature status"""
+enum SignatureStatus {
+  CANCELED
+  EXPIRED
+  FAILED
+  PENDING
+  RECURRENCY_PAUSED
+  REFUNDED
+  SUCCEEDED
+}
+
+type Tag {
+  id: ID!
+  name: String!
+  slug: String!
+}
+
+type Technology {
+  createdAt: DateTime!
+  id: ID!
+  imageUrl: String!
+  name: String!
+  slug: String!
+}
+
+type Trail {
+  about: String!
+  additionalInfo: String
+  courses: [Course!]!
+  createdAt: DateTime!
+  description: String!
+  educators: [Educator!]!
+  enabled: Boolean!
+  id: ID!
+  imageUrl: String!
+  order: Float!
+  previewVideoId: String!
+  requirements: String!
+  slug: String!
+  startsAt: DateTime!
+  statistics: TrailStatistics
+  subtitle: String!
+  title: String!
+}
+
+type TrailStatistics {
+  duration: Float!
+  totalLessons: Float!
+}
+
+type Transcription {
+  createdAt: DateTime!
+  id: ID!
+  lesson: Lesson!
+  transcription: JSON!
+}
+
+input UpdateCommentInput {
+  content: String!
+  id: String!
+  mentionedUsersIds: [String!]!
+}
+
+input UpdateCustomerInput {
+  name: String
+  phone: String
+}
+
+input UpdateLinkPostInput {
+  content: String!
+  id: String!
+  mentionedUsersIds: [String!]!
+  tagsIds: [String!]!
+}
+
+input UpdateUserBiographyInput {
+  about: String
+  github: String
+  id: String!
+  linkedin: String
+}
+
+input UpdateUserProfileInput {
+  city: String
+  company: String
+  country: String
+  id: String!
+  jobStatus: JobStatus
+  name: String
+  occupation: String
+  state: String
+  username: String
+}
+
+input UpsellTypes {
+  type: String!
+}
+
+input UpsertFeedbackInput {
+  additionalInformation: String
+  lessonId: String!
+  stars: Float!
+  time: Float!
+}
+
+input UpsertLessonProgressInput {
+  completed: Boolean
+  lessonId: String!
+  manuallyCompleted: Boolean
+  watchedPercentage: Float
+  watchedSeconds: Float
+}
+
+type User {
+  about: String
+  acceptedConnections(limit: Int = 10, offset: Int = 0): PaginatedConnection!
+  address: Address
+  atlasUserId: String!
+  avatarUrl: String
+  city: String
+  company: String
+  country: String
+  createdAt: DateTime!
+  email: String!
+  fiscalDocument: String
+  github: String
+  id: ID!
+  imageUrl: String!
+  jobStatus: JobStatus
+  lastWatchedLessons: LastWatchedLessons
+  linkedin: String
+  name: String!
+  occupation: String
+  pendingConnections(limit: Int = 10, offset: Int = 0): PaginatedConnection!
+  phone: String
+  postBookmarks: [UserPostBookmark!]
+  posts(limit: Int = 10, offset: Int = 0): PaginatedPost!
+  signatures: [Signature!]!
+  state: String
+  thirdPartyFiscalDocument: String
+  username: String
+}
+
+type UserPostBookmark {
+  id: ID!
+  post: Post!
+  user: User!
+}
+
+type Video {
+  creator: Creator!
+  description: String!
+  files(limit: Int = 10, offset: Int = 0): PaginatedVideoFiles!
+  id: ID!
+  isBookmarkVideo: Boolean!
+  isFree: Boolean!
+  isPartOfPlaylist: Boolean!
+  isWatchedVideo: Boolean!
+  jupiterVideoId: String!
+  releasedAt: DateTime!
+  sections(limit: Int = 10, offset: Int = 0): PaginatedVideoSections!
+  slug: String!
+  tags(limit: Int = 10, offset: Int = 0): PaginatedVideoTag!
+  thumbnailUrl: String!
+  title: String!
+}
+
+type VideoFile {
+  file: String!
+  id: ID!
+  title: String!
+  videoId: String!
+}
+
+type VideoLinkPreview implements LinkPreview {
+  embedUrl: String
+  id: ID!
+  siteName: String
+  title: String
+  url: String!
+}
+
+type VideoProgress {
+  id: ID!
+  memberId: String!
+  videoId: String!
+}
+
+type VideoSection {
+  id: ID!
+  time: Float!
+  title: String!
+}
+
+type VideoTag {
+  followersCount: Float!
+  id: ID!
+  isFollowingVideoTag: Boolean!
+  slug: String!
+  title: String!
+  videos(limit: Int = 10, offset: Int = 0): PaginatedVideos!
+}
+
+type VideoTagFollower {
+  id: ID!
+  memberId: String!
+}
